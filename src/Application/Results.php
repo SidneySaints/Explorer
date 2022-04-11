@@ -30,7 +30,7 @@ class Results implements Countable
         $aggregations = [];
 
         foreach ($this->rawResults['aggregations'] as $name => $rawAggregation) {
-            $aggregations[] = new AggregationResult($name, $rawAggregation['buckets']);
+            $aggregations[] = new AggregationResult($name, $rawAggregation['buckets'], $rawAggregation['sum_other_doc_count'] ?? null);
         }
 
         return $aggregations;
