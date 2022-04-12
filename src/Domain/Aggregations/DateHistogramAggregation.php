@@ -24,14 +24,12 @@ final class DateHistogramAggregation implements AggregationSyntaxInterface
     {
 
         return [
-            "date_histogram" => [
+            "date_histogram" => array_merge([
                 "min_doc_count" => 0,
                 "field" => $this->field,
                 "fixed_interval" => $this->interval,
                 "time_zone" => $this->timezone,
-                ...$this->options
-            ]
-
+            ], $this->options)
         ];
     }
 }
