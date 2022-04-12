@@ -28,4 +28,9 @@ class AggregationResult
     {
         return $this->buckets;
     }
+
+    public function sumOtherDocs(): ?int
+    {
+        return $this->sumOther;
+    }
 }
