@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace JeroenG\Explorer\Application;
 
 use Countable;
+use Illuminate\Support\Facades\Log;
 
 class Results implements Countable
 {
@@ -30,7 +31,7 @@ class Results implements Countable
         $aggregations = [];
 
         foreach ($this->rawResults['aggregations'] as $name => $rawAggregation) {
-            $aggregations[$name] = new AggregationResult($name, $rawAggregation['buckets'], $rawAggregation['sum_other_doc_count'] ?? null);
+            $aggregations[$name] = new AggregationResult($name, $rawAggregation['buckets'] ?? $rawAggregation, $rawAggregation['sum_other_doc_count'] ?? null);
         }
 
         return $aggregations;
