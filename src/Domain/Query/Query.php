@@ -10,6 +10,8 @@ use JeroenG\Explorer\Domain\Syntax\SyntaxInterface;
 
 class Query implements SyntaxInterface
 {
+    private array $params = [];
+
     private ?int $offset = null;
 
     private ?int $limit = null;
@@ -40,6 +42,10 @@ class Query implements SyntaxInterface
             'query' => $this->query->build()
         ];
 
+        if ($this->hasParams()){
+            $query = array_merge($query, $this->params);
+        }
+
         if ($this->hasPagination()) {
             $query['from'] = $this->offset;
         }
@@ -68,6 +74,16 @@ class Query implements SyntaxInterface
         }
 
         return $query;
+    }
+
+    public function setParams(array $params): void
+    {
+        $this->params = $params;
+    }
+
+    private function hasParams(): bool
+    {
+        return !empty($this->params);
     }
 
     public function setOffset(?int $offset): void

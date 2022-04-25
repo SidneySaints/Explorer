@@ -41,4 +41,5 @@ class Results implements Countable
     {
         return $this->rawResults['hits']['total']['value'];
     }
+    
 }
