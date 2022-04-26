@@ -2,16 +2,13 @@
 
 namespace JeroenG\Explorer\Domain\Aggregations;
 
+use JeroenG\Explorer\Domain\Syntax\SyntaxInterface;
+
 class CombinedAggregations implements AggregationSyntaxInterface
 {
 
-    private AggregationSyntaxInterface $agg;
     private array $aggregations = [];
 
-    public function __construct(AggregationSyntaxInterface $agg)
-    {
-        $this->agg = $agg;
-    }
 
     public function add(string $name, AggregationSyntaxInterface $agg): void
     {
@@ -20,10 +17,9 @@ class CombinedAggregations implements AggregationSyntaxInterface
 
     public function build(): array
     {
-        return array_merge(
-            $this->agg->build(),
-            ['aggs' => $this->buildNestedAggregations()]
-        );
+        return [
+            "aggs" => $this->buildNestedAggregations()
+        ];
     }
 
     private function buildNestedAggregations(): array

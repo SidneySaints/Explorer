@@ -11,6 +11,7 @@ final class DateHistogramAggregation implements AggregationSyntaxInterface
     private string $interval;
     private string $field;
     private array $options;
+    private array $aggregations = [];
 
     public function __construct(string $field, string $timezone, array $options = [])
     {
@@ -19,15 +20,37 @@ final class DateHistogramAggregation implements AggregationSyntaxInterface
         $this->timezone = $timezone;
     }
 
+    public function add(string $name, AggregationSyntaxInterface $agg): void
+    {
+        $this->aggregations[$name] = $agg;
+    }
+
     public function build(): array
     {
-
-        return [
+        $query =  [
             "date_histogram" => array_merge([
                 "min_doc_count" => 0,
                 "field" => $this->field,
                 "time_zone" => $this->timezone,
-            ], $this->options)
+            ], $this->options),
+
         ];
+
+        if(count($this->aggregations)){
+            $query = array_merge($query,[
+                'aggs' => $this->buildNestedAggregations()
+            ]);
+        }
+
+        return $query;
+    }
+
+    private function buildNestedAggregations(): array
+    {
+        $data = [];
+        foreach ($this->aggregations as $name => $aggregation) {
+            $data[$name] = $aggregation->build();
+        }
+        return $data;
     }
 }
